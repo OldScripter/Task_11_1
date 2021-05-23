@@ -2,9 +2,28 @@
 
 char shiftTheChar(char initialChar, int shift, char minChar, char maxChar)
 {
-    int shiftedLetter = initialChar + (char) shift;
-    if (shiftedLetter > maxChar) shiftedLetter = minChar + shiftedLetter % maxChar - 1;
-    else if (shiftedLetter < minChar) shiftedLetter = maxChar - minChar % shiftedLetter + 1;
+    char shiftedLetter;
+    char range = char(maxChar - minChar + 1);
+    if ((int)initialChar + shift > (int) maxChar)
+    {
+        char restRight = char(maxChar - initialChar);
+        int restShift = shift - restRight;
+        int normedShift = restShift % (int)range;
+        if (normedShift == 0) shiftedLetter = minChar;
+        else shiftedLetter = char(minChar + normedShift - 1);
+    }
+    else if ((int)initialChar + shift < (int) minChar)
+    {
+        char restLeft = char(initialChar - minChar);
+        int restShift = shift + restLeft;
+        int normedShift = restShift % range;
+        if (normedShift == 0) shiftedLetter = minChar;
+        else shiftedLetter = char(maxChar + normedShift + 1);
+    }
+    else
+    {
+        shiftedLetter = char(initialChar + shift);
+    }
     return shiftedLetter;
 }
 
@@ -31,8 +50,6 @@ std::string decrypt_caesar(std::string text, int parameter)
 }
 
 int main() {
-
-
     int parameter;
 
     std::string textToEncrypt;
@@ -43,11 +60,9 @@ int main() {
     std::cin >> parameter;
 
     std::cout << "\n---Encrypting---\n\n";
-
     std::cout << "Encrypted text:\n" << encrypt_caesar(textToEncrypt, parameter) << "\n";
 
     std::cout << "\n---Decrypting---\n\n";
-
     std::cout << "Decrypted text:\n" << decrypt_caesar(encrypt_caesar(textToEncrypt, parameter), parameter) << "\n";
 
     return 0;
